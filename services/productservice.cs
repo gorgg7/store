@@ -12,7 +12,7 @@ using shared;
 namespace services
 {
 
-    public class productservice(Iunitofwork unitofwork,IMapper mapper ) : iproductservice
+        public class productservice(Iunitofwork unitofwork,IMapper mapper ) : iproductservice
     {
 
         public async Task<IEnumerable<branddto>> GetProductbranddto()
@@ -23,14 +23,16 @@ namespace services
         }
         public async Task<productdto> GetProductdto(int id)
         {
-            var productt = await unitofwork.GetRepository<product, int>().GetByIdAsync(id);
+            var specs = new Productwithfilterspecifications(id);
+            var productt = await unitofwork.GetRepository<product, int>().GetByIdAsync(specs);
             var mappedproductt = mapper.Map<productdto>(productt);
             return mappedproductt;
         }
 
-        public async Task<IEnumerable<productdto>> GetProductdtos()
+        public async Task<IEnumerable<productdto>> GetProductdtos(productspecparameters specss)
         {
-            var product = await unitofwork.GetRepository<product, int>().GetAllAsync();
+            var specs = new Productwithfilterspecifications(specss);
+            var product = await unitofwork.GetRepository<product, int>().GetAllAsync(specs);
             var mappedproduct = mapper.Map<IEnumerable<productdto>>(product);
             return mappedproduct;
 
