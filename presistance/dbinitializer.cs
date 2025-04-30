@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +6,25 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using domain.contracts;
 using domain.entites;
+using domain.entites.identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using presistance.data;
+using presistance.identity;
 namespace presistance
 {
     public class dbinitializer : idbinitializer
     {
         private readonly storedbcontext _context;
-        public dbinitializer(storedbcontext context)
+        private readonly Storeidentitydb _storeidentitydb;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<user> _userManager;
+        public dbinitializer(storedbcontext context, Storeidentitydb storeidentitydb, RoleManager<IdentityRole> roleManager, UserManager<user> userManager)
         {
             _context = context;
+             _storeidentitydb = storeidentitydb;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
         public async Task Initialize()
         {
@@ -64,8 +73,45 @@ namespace presistance
                 throw;
             }
         }
+
+        public async Task Initializeidentity()
+        {
+            if (_storeidentitydb.Database.GetPendingMigrations().Any())
+            {
+                await _storeidentitydb.Database.MigrateAsync();
+            }
+            if (!_roleManager.Roles.Any())
+            {
+               await _roleManager.CreateAsync(new IdentityRole("admin"));
+                await _roleManager.CreateAsync(new IdentityRole("superadmin"));
+
+            }
+            if (!_userManager.Users.Any())
+            {
+                var superadmin = new user
+                {
+                    DisplayName = "superadmin",
+                    Email= "superadmin@gmail.com",
+                    UserName = "superadmin",
+                    PhoneNumber = "123456789",
+                };
+                var admin = new user
+                {
+                    DisplayName = "admin",
+                    Email = "admin@gmail.com",
+                    UserName = "admin",
+                    PhoneNumber = "987654321",
+                };
+                await _userManager.CreateAsync(superadmin, "Passw0rd");
+                 await _userManager.CreateAsync(admin, "Passw0rd");
+                await _userManager.AddToRoleAsync(superadmin, "superadmin");
+                await _userManager.AddToRoleAsync(admin, "admin");
+
+
+            }
+
+        }
     }
-}
-    // Check if the database exists and create it if it doesn't
+    }
 
    
