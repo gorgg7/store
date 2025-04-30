@@ -9,5 +9,7 @@ namespace domain.contracts
     public interface idbinitializer
     {
         public Task Initialize();
+        public Task Initializeidentity();
+
     }
 }
