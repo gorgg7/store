@@ -10,5 +10,7 @@ namespace services.abstractions
     public interface Iservicemanagment
     {
         iproductservice iproductservice { get; }
+        Iauthenticationservice iauthenticationservice { get; }
+
     }
 }
