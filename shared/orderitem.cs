@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace shared.orderdto
 {
-    internal class orderitem
+    public class orderitem
     {
+        public int id;
+        public string productname { get; set; }
+        public string producturl { get; set; }
+        public decimal price { get; set; }
+        public decimal quantity { get; set; }
     }
 }

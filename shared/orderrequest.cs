@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace shared.orderdto
 {
-    internal class orderrequest
+    public class orderrequest
     {
+        public string basketid { get; set; }
+        public addressdto shippingaddres { get; set; }
+        public int deleverymethodid { get; set; }
+        public string buyeremail { get; set; }
     }
 }

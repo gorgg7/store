@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace shared.orderdto
 {
-    internal class addressdto
+    public class addressdto
     {
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public string street { get; set; }
+        public string city { get; set; }
+        public string country { get; set; }
+        
     }
 }
